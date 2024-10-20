@@ -1,5 +1,5 @@
+#pragma once
 #include <chrono>
-#include <iostream>
 
 struct Timer
 {
@@ -7,6 +7,7 @@ struct Timer
 	std::chrono::duration<float> duration;
 
 	Timer();
-	float GetDurationElapsed(); // returns time elapsed in mili-second 
+	float getDurationElapsed(); // returns time elapsed in mili-second 
+	void resetTimer();
 	~Timer();
 };
