@@ -4,6 +4,7 @@ Renderer::Renderer(){
 	this->width  = 800;
 	this->height = 800;
 	this->title = "Renderer";
+	this->time = 0.0f;
 	this->timer = Timer();
 	m_image = GenImageColor(this->width, this->height, BLACK);
 	init();
@@ -13,6 +14,7 @@ Renderer::Renderer(int width, int height, std::string title){
 	this->width  = width;
 	this->height = height; 
 	this->title  = title;
+	this->time = 0.0f;
 	m_image = GenImageColor(this->width, this->height, BLACK);
 	init();
 }
@@ -24,7 +26,7 @@ void Renderer::init(){
 }
 
 void Renderer::onResize(){
-	Timer timer;
+	this->timer.resetTimer();
 	this->width  = GetScreenWidth();
 	this->height = GetScreenHeight();			
 	ImageResizeNN(&this->m_image, this->width, this->height);
@@ -36,6 +38,7 @@ void Renderer::onResize(){
 
 	UnloadTexture(this->m_render);
 	this->m_render = LoadTextureFromImage(this->m_image);
+	this->time = this->timer.getDurationElapsed();
 }
 
 void Renderer::render(){
@@ -45,8 +48,7 @@ void Renderer::render(){
 
 	const int fontSize = 20;
 	const int padding  = 10;
-	const float timeElapsed = this->timer.getDurationElapsed();
-	const std::string txt = ("TIME: " + std::to_string(timeElapsed) + "ms");
+	const std::string txt = ("TIME: " + std::to_string(this->time) + "ms");
 	const int textSize = MeasureText(txt.c_str(), fontSize);
 	DrawText(txt.c_str(), width - textSize - padding, padding, fontSize, WHITE);
 
@@ -54,7 +56,8 @@ void Renderer::render(){
 }
 
 Color Renderer::perPixel(int w, int h){
-	return PINK;
+	Color color = {static_cast<unsigned char>((float)w/this->width * 255), static_cast<unsigned char>((float)h/this->height * 255), 0 ,255};
+	return color;
 }
 
 bool Renderer::isRunning(){

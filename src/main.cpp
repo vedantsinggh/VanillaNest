@@ -2,7 +2,6 @@
 #include <iostream>
 
 #include "renderer.h"
-#include "utils.h"
 
 int main(void)
 {

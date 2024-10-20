@@ -12,6 +12,7 @@ private:
 	Texture2D m_render;
 	Image m_image;
 	Timer timer;
+	float time;
 
 public:
 	Renderer();
