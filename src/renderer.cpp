@@ -55,9 +55,32 @@ void Renderer::render(){
 	EndDrawing();
 }
 
-Color Renderer::perPixel(int w, int h){
-	Color color = {static_cast<unsigned char>((float)w/this->width * 255), static_cast<unsigned char>((float)h/this->height * 255), 0 ,255};
-	return color;
+struct vec {
+	float x, y, z;
+};
+
+float dot(vec a, vec b){
+	return a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
+Color Renderer::perPixel(int w, int h) {
+    vec origin = {0, 0, -2}; 
+    
+    float x = float(w)/width  * 2 - 1;
+    float y = float(h)/height * 2 - 1;
+    vec dir = {x, y, 1.0f};
+    float radius = 0.5;
+
+    float a = dot(dir, dir); 
+    float b = 2.0f * dot(origin, dir);
+    float c = dot(origin, origin) - radius * radius;
+    float discriminant = b * b - 4 * a * c;
+
+    if (discriminant >= 0) {
+        return PINK; 
+    }
+
+    return BLACK;
 }
 
 bool Renderer::isRunning(){

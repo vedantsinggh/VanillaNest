@@ -10,9 +10,9 @@ public:
 private:
 	//TODO int m_aspectRatio;
 	Texture2D m_render;
-	Image m_image;
 	Timer timer;
 	float time;
+	Image m_image;
 
 public:
 	Renderer();
