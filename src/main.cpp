@@ -5,7 +5,7 @@
 
 int main(void)
 {
-	Renderer renderer(800,800, "Chase");
+	Renderer renderer(500,500, "Chase");
 	renderer.onResize();
 
 	while(renderer.isRunning()){

@@ -1,13 +1,11 @@
 #include "utils.h"
 #include <cmath>
 
-namespace Utils {
-	float clamp(float x, float a, float b){
-		if (x < a) return a;
-		if (x > b) return b;
-		return x;
-	}
-};
+float Utils::clamp(float x, float a, float b){
+	if (x < a) return a;
+	if (x > b) return b;
+	return x;
+}
 
 Timer::Timer(){	
 	start = std::chrono::high_resolution_clock::now();
