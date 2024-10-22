@@ -21,7 +21,7 @@ public:
 	void render();
 	bool isRunning();
 	bool isResized();
-	Color perPixel(int w, int h);
+	Color perPixel(int w, int h, float time);
 	~Renderer();
 private:
 	void init();

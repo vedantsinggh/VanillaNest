@@ -5,11 +5,11 @@
 
 int main(void)
 {
-	Renderer renderer(500,500, "Chase");
+	Renderer renderer(800,800, "Chase");
 	renderer.onResize();
 
 	while(renderer.isRunning()){
-		if (renderer.isResized())
+		//if (renderer.isResized())
 			renderer.onResize();
 		renderer.render();
 	}
