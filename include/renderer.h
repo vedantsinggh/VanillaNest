@@ -7,8 +7,9 @@ class Renderer{
 public:
 	int width, height;
 	std::string title;
+	int inverseResolutionScale = 1;
 private:
-	//TODO int m_aspectRatio;
+	const float m_aspectRatio = 16.0f/9.0f;
 	Texture2D m_render;
 	Timer timer;
 	float time;

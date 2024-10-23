@@ -6,7 +6,7 @@
 
 Renderer::Renderer(){
 	this->width  = 800;
-	this->height = 800;
+	this->height = 450;
 	this->title = "Renderer";
 	this->time = 0.0f;
 	this->timer = Timer();
@@ -27,13 +27,14 @@ void Renderer::init(){
 	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	InitWindow(this->width, this->height, this->title.c_str());
 	SetWindowMinSize(250,250);
+	this->inverseResolutionScale = 2;
 	this->m_render = LoadTextureFromImage(this->m_image);
 }
 
 void Renderer::onResize() {
     this->timer.resetTimer();
-    this->width  = GetScreenWidth();
     this->height = GetScreenHeight();
+    this->width  = GetScreenWidth();
 
     ImageResizeNN(&this->m_image, this->width, this->height);
 
@@ -42,8 +43,8 @@ void Renderer::onResize() {
     float time = GetTime();
 
     auto renderTask = [&](int start, int end) {
-        for (int w = start; w < end; ++w) {
-            for (int h = 0; h < this->height; ++h) {
+        for (int w = start; w < end; w+=this->inverseResolutionScale){
+            for (int h = 0; h < this->height; h+=this->inverseResolutionScale) {
 				Color existingColor = GetImageColor(this->m_image, w, h);
                 Color color = this->perPixel(w, h, time);
 				if (color.r == existingColor.r && color.g == existingColor.g &&
@@ -68,6 +69,7 @@ void Renderer::onResize() {
 	this->m_render = LoadTextureFromImage(this->m_image);
     this->time = this->timer.getDurationElapsed();
 }
+
 void Renderer::render(){
 
 	const int fontSize = 20;
@@ -86,19 +88,19 @@ void Renderer::render(){
 
 Color Renderer::perPixel(int w, int h, float time) {
     
-    float radius = 0.5;
+    const float radius = 0.5;
     const float x = (float)w * 2/width  - 1;
     const float y = (float)h * -2/height + 1;
 	const Vec3 spherecenter(0.0f, 0.0f, 0.0f);
 
     Vec3 dir(x, y, 1.0f);
-    Vec3 cameraposition(0.0f,0.0f,-2.0f); 
-	Vec3 lightdirection(sinf(time), 0.0f, cosf(time));
+    Vec3 cameraposition(0.0f,0.0f,-2.0f); // Need to get from camera
+	Vec3 lightdirection(sinf(time), 2.0f, cosf(time));
 
-    float a = dir.dot(dir); 
-    float b = 2.0f * dir.dot(cameraposition - spherecenter);
-    float c = (cameraposition - spherecenter).dot(cameraposition - spherecenter) - radius * radius;
-    float discriminant = b * b - 4 * a * c;
+    const float a = dir.dot(dir); 
+    const float b = 2.0f * dir.dot(cameraposition - spherecenter);
+    const float c = (cameraposition - spherecenter).dot(cameraposition - spherecenter) - radius * radius;
+    const float discriminant = b * b - 4 * a * c;
 
 
     if (discriminant >= 0) {
