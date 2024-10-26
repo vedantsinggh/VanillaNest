@@ -24,6 +24,12 @@ void Timer::resetTimer(){
 Timer::~Timer(){	
 }
 
+Vec3::Vec3() {
+    this->x = 0.0f;
+    this->y = 0.0f;
+    this->z = 0.0f;
+}
+
 Vec3::Vec3(float a, float b, float c) {
     this->x = a;
     this->y = b;

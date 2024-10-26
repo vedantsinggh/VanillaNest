@@ -1,16 +1,12 @@
 #include "renderer.h"
-#include <iostream>
-#include <cmath>
-#include <thread>
-#include <vector>
+#include "raygui.h"
+
+using namespace chase;
 
 Renderer::Renderer(){
 	this->width  = 800;
-	this->height = 450;
+	this->height = 800;
 	this->title = "Renderer";
-	this->time = 0.0f;
-	this->timer = Timer();
-	m_image = GenImageColor(this->width, this->height, BLACK);
 	init();
 }
 
@@ -18,16 +14,19 @@ Renderer::Renderer(int width, int height, std::string title){
 	this->width  = width;
 	this->height = height; 
 	this->title  = title;
-	this->time = 0.0f;
-	m_image = GenImageColor(this->width, this->height, BLACK);
 	init();
 }
 
 void Renderer::init(){
-	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+	SetConfigFlags(FLAG_BORDERLESS_WINDOWED_MODE);
 	InitWindow(this->width, this->height, this->title.c_str());
 	SetWindowMinSize(250,250);
-	this->inverseResolutionScale = 2;
+	m_image = GenImageColor(this->width, this->height, BLACK);
+
+	this->mainCamera = Camera(0.0f, 0.0f, -2.0f);
+	this->time = 0.0f;
+	this->timer = Timer();
+	this->inverseResolutionScale = 1;
 	this->m_render = LoadTextureFromImage(this->m_image);
 }
 
@@ -40,7 +39,7 @@ void Renderer::onResize() {
 
     const int numThreads = 10;
     std::vector<std::thread> threads;
-    float time = GetTime();
+    const float time = GetTime();
 
     auto renderTask = [&](int start, int end) {
         for (int w = start; w < end; w+=this->inverseResolutionScale){
@@ -54,7 +53,7 @@ void Renderer::onResize() {
         }
     };
 
-    int workPerThread = this->width / numThreads;
+    const int workPerThread = this->width / numThreads;
     for (int i = 0; i < numThreads; ++i) {
         int start = i * workPerThread;
         int end = (i == numThreads - 1) ? this->width : start + workPerThread;
@@ -93,25 +92,21 @@ Color Renderer::perPixel(int w, int h, float time) {
     const float y = (float)h * -2/height + 1;
 	const Vec3 spherecenter(0.0f, 0.0f, 0.0f);
 
-    Vec3 dir(x, y, 1.0f);
-    Vec3 cameraposition(0.0f,0.0f,-2.0f); // Need to get from camera
-	Vec3 lightdirection(sinf(time), 2.0f, cosf(time));
+    const Vec3 dir(x, y, 1.0f);
+	const Vec3 lightdirection(sinf(time), 2.0f, cosf(time));
 
     const float a = dir.dot(dir); 
-    const float b = 2.0f * dir.dot(cameraposition - spherecenter);
-    const float c = (cameraposition - spherecenter).dot(cameraposition - spherecenter) - radius * radius;
+    const float b = 2.0f * dir.dot(mainCamera.position - spherecenter);
+    const float c = (mainCamera.position - spherecenter).dot(mainCamera.position - spherecenter) - radius * radius;
     const float discriminant = b * b - 4 * a * c;
 
 
     if (discriminant >= 0) {
-		float hitnear = (-b - sqrt(discriminant)) / (2 * a);
-		//float hitfar  = (-b + sqrt(discriminant)) / (2 * a);
+		const float hitnear = (-b - sqrt(discriminant)) / (2 * a);
+		const Vec3 hitpoint = mainCamera.position + dir * hitnear;
+		const float d = (hitpoint).dot(lightdirection);
 
-		Vec3 hitpoint = cameraposition + dir * hitnear;
-
-		float d = (hitpoint).dot(lightdirection);
-
-		Color hitcolor = {static_cast<unsigned char>(Utils::clamp(d * 255, 0, 255)),
+		const Color hitcolor = {static_cast<unsigned char>(Utils::clamp(d * 255, 0, 255)),
 						  static_cast<unsigned char>(Utils::clamp(d * 255, 0, 255)),
 						  static_cast<unsigned char>(Utils::clamp(d * 255, 0, 255)), 255};
         return hitcolor; 

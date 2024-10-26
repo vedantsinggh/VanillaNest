@@ -18,6 +18,7 @@ struct Timer
 class Vec3 {
 public:
     float x, y, z;
+    Vec3();
     Vec3(float a, float b, float c);
     float dot(const Vec3& b) const;
     float mag() const;

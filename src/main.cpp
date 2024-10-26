@@ -3,9 +3,11 @@
 
 #include "renderer.h"
 
+using namespace chase;
+
 int main(void)
 {
-	Renderer renderer(500,500, "Chase");
+	Renderer renderer(900,900, "Chase");
 	renderer.onResize();
 
 	while(renderer.isRunning()){
