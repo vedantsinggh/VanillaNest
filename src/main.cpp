@@ -1,18 +1,19 @@
-#include <string>
-#include <iostream>
-
 #include "renderer.h"
+#include "scene.h"
 
 using namespace chase;
 
 int main(void)
 {
-	Renderer renderer(900,900, "Chase");
-	renderer.onResize();
+	Scene scene;
+	scene.spheres.push_back( Sphere {0.0f, 0.0f, -1.0f, 0.1f} );
+	scene.spheres[0].color = RED;
+	scene.spheres.push_back( Sphere {0.0f, 0.0f, 0.0f, 0.5f} );
+	scene.spheres[1].color = BEIGE;
+	Renderer renderer(900,900, "Chase", scene);
 
 	while(renderer.isRunning()){
-		//if (renderer.isResized())
-			renderer.onResize();
+		renderer.reframe();
 		renderer.render();
 	}
 

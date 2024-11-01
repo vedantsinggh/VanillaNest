@@ -3,10 +3,8 @@
 #include "raylib.h"
 #include "utils.h"
 #include "camera.h"
-#include <iostream>
-#include <cmath>
 #include <thread>
-#include <vector>
+#include "scene.h"
 
 namespace chase {
 
@@ -16,6 +14,7 @@ namespace chase {
 		std::string title;
 		int inverseResolutionScale = 1;
 		Camera mainCamera;
+		Scene scene;
 	private:
 		const float m_aspectRatio = 16.0f/9.0f; //TODO
 		Texture2D m_render;
@@ -25,8 +24,8 @@ namespace chase {
 
 	public:
 		Renderer();
-		Renderer(int width, int height, std::string title);
-		void onResize();
+		Renderer(int width, int height, std::string title, Scene scene);
+		void reframe();
 		void render();
 		bool isRunning();
 		bool isResized();

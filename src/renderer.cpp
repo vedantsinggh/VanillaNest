@@ -1,5 +1,5 @@
 #include "renderer.h"
-#include "raygui.h"
+#include <cmath>
 
 using namespace chase;
 
@@ -10,10 +10,11 @@ Renderer::Renderer(){
 	init();
 }
 
-Renderer::Renderer(int width, int height, std::string title){
+Renderer::Renderer(int width, int height, std::string title, Scene scene){
 	this->width  = width;
 	this->height = height; 
 	this->title  = title;
+	this->scene  = scene;
 	init();
 }
 
@@ -30,7 +31,7 @@ void Renderer::init(){
 	this->m_render = LoadTextureFromImage(this->m_image);
 }
 
-void Renderer::onResize() {
+void Renderer::reframe() {
     this->timer.resetTimer();
     this->height = GetScreenHeight();
     this->width  = GetScreenWidth();
@@ -87,32 +88,47 @@ void Renderer::render(){
 
 Color Renderer::perPixel(int w, int h, float time) {
     
-    const float radius = 0.5;
     const float x = (float)w * 2/width  - 1;
     const float y = (float)h * -2/height + 1;
-	const Vec3 spherecenter(0.0f, 0.0f, 0.0f);
 
     const Vec3 dir(x, y, 1.0f);
 	const Vec3 lightdirection(sinf(time), 2.0f, cosf(time));
 
-    const float a = dir.dot(dir); 
-    const float b = 2.0f * dir.dot(mainCamera.position - spherecenter);
-    const float c = (mainCamera.position - spherecenter).dot(mainCamera.position - spherecenter) - radius * radius;
-    const float discriminant = b * b - 4 * a * c;
+	const Sphere *hitsphere = nullptr;
+	int hitmax = 10000;
+	float angle = 0;
+	for (int i = 0; i < scene.spheres.size(); i++){
+
+		const Sphere sphere = scene.spheres[i];
+		const float a = dir.dot(dir); 
+		const float b = 2.0f * dir.dot(mainCamera.position - sphere.position);
+		const float c = (mainCamera.position - sphere.position)
+			.dot(mainCamera.position - sphere.position) - sphere.radius * sphere.radius;
+		const float discriminant = b * b - 4 * a * c;
 
 
-    if (discriminant >= 0) {
-		const float hitnear = (-b - sqrt(discriminant)) / (2 * a);
-		const Vec3 hitpoint = mainCamera.position + dir * hitnear;
-		const float d = (hitpoint).dot(lightdirection);
+		if (discriminant >= 0) {
+			const float hitnear = (-b - sqrt(discriminant)) / (2 * a);
+			const Vec3 hitpoint = mainCamera.position + dir * hitnear;
+			const float d = (hitpoint).dot(lightdirection); // it is hit-distance from camera point
 
-		const Color hitcolor = {static_cast<unsigned char>(Utils::clamp(d * 255, 0, 255)),
-						  static_cast<unsigned char>(Utils::clamp(d * 255, 0, 255)),
-						  static_cast<unsigned char>(Utils::clamp(d * 255, 0, 255)), 255};
-        return hitcolor; 
-    }
+			if (hitnear < hitmax){
+				hitmax = hitnear;
+				hitsphere = &(scene.spheres[i]);
+				angle = d;
+			}
+		}
+	}
 
-    return LIME;
+
+
+	if (!hitsphere)
+		return BLACK;
+
+	const Color hitcolor = {static_cast<unsigned char>(Utils::clamp(angle * hitsphere->color.r, 0, 200)),
+					  static_cast<unsigned char>(Utils::clamp(angle * hitsphere->color.g, 0, 200)),
+					  static_cast<unsigned char>(Utils::clamp(angle * hitsphere->color.b, 0, 200)), 255};
+	return hitcolor; 
 }
 
 bool Renderer::isRunning(){
