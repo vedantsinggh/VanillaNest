@@ -6,7 +6,7 @@ SRCDIR := src
 INCDIR := include
 OBJDIR := build/obj
 BINDIR := build
-TARGET := $(BINDIR)/chase
+TARGET := $(BINDIR)/Vanilla
 
 SRC := $(wildcard $(SRCDIR)/*.cpp)
 OBJ := $(SRC:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)

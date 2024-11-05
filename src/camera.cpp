@@ -1,6 +1,6 @@
-#include "camera.h" 
+#include "Vanilla/camera.h" 
 
-using namespace chase;
+using namespace Nest;
 
 Camera::Camera(){}
 

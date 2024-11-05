@@ -1,12 +1,12 @@
 #pragma once
 #include <string>
 #include "raylib.h"
-#include "utils.h"
-#include "camera.h"
+#include "Vanilla/utils.h"
+#include "Vanilla/camera.h"
 #include <thread>
-#include "scene.h"
+#include "Vanilla/scene.h"
 
-namespace chase {
+namespace Nest {
 
 	class Renderer{
 	public:

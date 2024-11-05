@@ -1,7 +1,7 @@
-#include "utils.h"
+#include "Vanilla/utils.h"
 #include <cmath>
 
-float Utils::clamp(float x, float a, float b){
+float VN::clamp(float x, float a, float b){
 	if (x < a) return a;
 	if (x > b) return b;
 	return x;

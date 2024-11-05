@@ -1,9 +1,9 @@
 #pragma once
-#include "utils.h"
+#include "Vanilla/utils.h"
 #include "raylib.h"
 #include <vector>
 
-namespace chase {
+namespace Nest {
 	class Sphere {
 		public:
 			Sphere(float x, float y, float z, float r);
@@ -13,7 +13,7 @@ namespace chase {
 	};
 }
 
-namespace chase {
+namespace Nest {
 	class Scene {
 		public:
 			std::vector<Sphere> spheres;

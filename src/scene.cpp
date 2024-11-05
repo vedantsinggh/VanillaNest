@@ -1,6 +1,6 @@
-#include "scene.h"
+#include "Vanilla/scene.h"
 
-using namespace chase;
+using namespace Nest;
 
 Sphere::Sphere(float x, float y, float z, float r){
 	position.x = x;

@@ -1,7 +1,7 @@
 #pragma once
 #include <chrono>
 
-namespace Utils {
+namespace VN {
 	float clamp(float, float, float);
 }
 struct Timer

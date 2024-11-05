@@ -1,7 +1,7 @@
-#include "renderer.h"
+#include "Vanilla/renderer.h"
 #include <cmath>
 
-using namespace chase;
+using namespace Nest;
 
 Renderer::Renderer(){
 	this->width  = 800;
@@ -97,7 +97,7 @@ Color Renderer::perPixel(int w, int h, float time) {
 	const Sphere *hitsphere = nullptr;
 	int hitmax = 10000;
 	float angle = 0;
-	for (int i = 0; i < scene.spheres.size(); i++){
+	for (size_t i = 0; i < scene.spheres.size(); i++){
 
 		const Sphere sphere = scene.spheres[i];
 		const float a = dir.dot(dir); 
@@ -125,9 +125,9 @@ Color Renderer::perPixel(int w, int h, float time) {
 	if (!hitsphere)
 		return BLACK;
 
-	const Color hitcolor = {static_cast<unsigned char>(Utils::clamp(angle * hitsphere->color.r, 0, 200)),
-					  static_cast<unsigned char>(Utils::clamp(angle * hitsphere->color.g, 0, 200)),
-					  static_cast<unsigned char>(Utils::clamp(angle * hitsphere->color.b, 0, 200)), 255};
+	const Color hitcolor = {static_cast<unsigned char>(VN::clamp(angle * hitsphere->color.r, 0, 200)),
+					  static_cast<unsigned char>(VN::clamp(angle * hitsphere->color.g, 0, 200)),
+					  static_cast<unsigned char>(VN::clamp(angle * hitsphere->color.b, 0, 200)), 255};
 	return hitcolor; 
 }
 

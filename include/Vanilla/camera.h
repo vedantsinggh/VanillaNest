@@ -1,7 +1,7 @@
 #pragma once
-#include "utils.h"
+#include "Vanilla/utils.h"
 
-namespace chase {
+namespace Nest {
     class Camera {
     public:
         Vec3 position;
